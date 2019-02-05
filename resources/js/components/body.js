@@ -8,14 +8,19 @@ class Body extends Component {
   render() {
     return (
       <Router>
-        <div>
-          <div className="col-md-3">
-            <Sidebar />
-          </div>
-          <div className="col-md-9">
-            <Route path="/users" component={App.UsersPage} />
-            <Route path="/providers" component={App.ProvidersPage} />
-            <Route path="/products" component={App.ProductsPage} />
+        <div id="wrapper">
+          <Sidebar />
+          <div id="content-wrapper" className="d-flex flex-column">
+            <div id="content">
+              <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                &nbsp;
+              </nav>
+              <div className="container-fluid">
+                <Route path="/users" component={App.UsersPage} />
+                <Route path="/providers" component={App.ProvidersPage} />
+                <Route path="/products" component={App.ProductsPage} />
+              </div>
+            </div>
           </div>
         </div>
       </Router>

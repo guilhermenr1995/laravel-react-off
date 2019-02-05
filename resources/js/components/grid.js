@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Table } from 'react-bootstrap';
 import axios from 'axios';
+import { NewButton } from './modal';
 
 const API_PREFIX = 'api/';
 
@@ -20,7 +21,6 @@ class Grid extends Component {
   componentDidMount() {
 
     let data = {};
-
 
     axios.get(API_PREFIX + this.moduleName).then(res => {
 
@@ -49,36 +49,59 @@ class Grid extends Component {
         data: res.data
       };
 
-      this.setState(data);
+      this.setState(data, () => {
+        if (res.data.length > 0) {
+          
+          let selector = "table[data-gridname=" + this.moduleName + "]";
+
+          $(selector).DataTable({
+            sort: false,
+            scrollCollapse: true,
+            info: true,
+            paging: true
+          });
+        }
+      });
     });
   }
 
   render() {
+
     return (
       <div>
 
-        <h1>{this.props.modtitle}</h1>
+        <h1 className="h3 mb-2 text-gray-800">
+          {this.props.modtitle} &nbsp;
+        </h1>
 
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              {this.state[this.moduleName].objKeys.map((item, i) => {
-                return (<th key={i}>{item}</th>)
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {this.state[this.moduleName].data.map((item, i) => {
-              return (
-                <tr key={i}>
-                  {this.state[this.moduleName].objKeys.map((propName, j) => {
-                    return (<td key={j}>{item[propName]}</td>)
+        <div className="card shadow mb-4">
+          <div className="card-header py-3">
+            <NewButton modtitle={this.props.modtitle} />
+          </div>
+
+          <div className="card-body">
+            <Table data-gridname={this.moduleName} className="striped bordered hover">
+              <thead>
+                <tr>
+                  {this.state[this.moduleName].objKeys.map((item, i) => {
+                    return (<th key={i}>{item}</th>)
                   })}
                 </tr>
-              )
-            })}
-          </tbody>
-        </Table>
+              </thead>
+              <tbody>
+                {this.state[this.moduleName].data.map((item, i) => {
+                  return (
+                    <tr key={i}>
+                      {this.state[this.moduleName].objKeys.map((propName, j) => {
+                        return (<td key={j}>{item[propName]}</td>)
+                      })}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </Table>
+          </div>
+        </div>
       </div>
     );
   }
